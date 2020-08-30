@@ -1,0 +1,57 @@
+#Dependencies
+import os
+import csv
+
+#variables 
+candidate = []
+vote_count = {}
+percentage = {}
+
+
+total_votes = 0
+
+#read csv
+with open('election_data.csv', newline = '') as csvfile:
+    csvreader = csv.reader(csvfile,delimiter=',')
+    next(csvreader, None)
+    #cycle through data and append candidate list with candidate
+    #increases vote counter by 1
+    for row in csvreader:
+        total_votes += 1
+        if row[2] in candidate and row[2] not in "Candidate":
+            vote_count[row[2]] = vote_count[row[2]] + 1
+        #create new spot in list for candidate
+        else:
+            candidate.append(row[2])
+            vote_count[row[2]] = 1
+
+# % calculation
+for key,value in vote_count.items():
+    percentage[key] = str(round((value/total_votes)*100,3)) + "% ("+str(value)+ ")"
+
+# winner
+winner = max(vote_count.keys(), key=(lambda k: vote_count[k]))
+
+#output to txt file
+with open('Election Results.txt','w',newline='') as textfile:
+    print('Election Results', file = textfile)
+    print('----------------------------------',file = textfile)
+    print(f'Total Votes: {total_votes}', file = textfile)
+    print(f'Percentage: {percentage}', file = textfile)
+    print('----------------------------------',file = textfile)
+    print(f'Winner: {winner}', file = textfile)
+    print('----------------------------------', file = textfile)
+
+with open('Election Results.txt', newline='')as csvfile:
+        csvreader = csv.reader(csvfile, delimiter=',')
+        for row in csvreader:
+            print(row)
+Election Results
+----------------------------------
+Total Votes: 3521001
+Percentage: {'Khan': '63.0% (2218231)', 'Correy': '20.0% (704200)', 'Li': '14.0% (492940)', "O'Tooley": '3.0% (105630)'}
+----------------------------------
+Winner: Khan
+----------------------------------
+
+
